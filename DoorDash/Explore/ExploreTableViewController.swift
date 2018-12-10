@@ -17,29 +17,21 @@ class ExploreTableViewController: UIViewController, UITableViewDataSource, UITab
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         self.tabBarController?.navigationItem.title = "DoorDash"
-        
         setLeftBarButtonItem()
-        
         fetchDataFromServer((annotation?.location ?? nil)!)
-        DispatchQueue.main.async {
-            self.exploreTableView.reloadData()
-        }
-    }
-    
-    @objc func buttonClicked() {
-        self.navigationController?.popViewController(animated: true)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // tableview is under tabbar issue fixes
         let adjustForTabbarInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: self.tabBarController!.tabBar.frame.height, right: 0)
         self.exploreTableView.contentInset = adjustForTabbarInsets
         self.exploreTableView.scrollIndicatorInsets = adjustForTabbarInsets
         self.automaticallyAdjustsScrollViewInsets = false
     }
 
+    // custom left bar button item
     func setLeftBarButtonItem()
     {
         let button  = UIButton(type: .custom)
@@ -50,6 +42,11 @@ class ExploreTableViewController: UIViewController, UITableViewDataSource, UITab
         button.addTarget(self, action: #selector(self.buttonClicked), for: .touchUpInside)
         let barButton = UIBarButtonItem(customView: button)
         self.tabBarController?.navigationItem.leftBarButtonItem = barButton
+    }
+    
+    // navigate back to MapViewController
+    @objc func buttonClicked() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -94,15 +91,18 @@ class ExploreTableViewController: UIViewController, UITableViewDataSource, UITab
     {
         let service = StoreSearchService(location: Observer(Location(lat: annotation?.location.lat ?? 0.0, lng: annotation?.location.lng ?? 0.0)))
         
+        // service call
         service.getData() {result in
             switch result {
             case .success(let storeSearchData):
+                // response data to refresh tableview
                 self.stores = storeSearchData
             DispatchQueue.main.async {
                 self.exploreTableView.reloadData()
             }
             case .failure(let error):
                 DispatchQueue.main.async(execute: {
+                    // issue an alert
                     self.showAlert(heading: "Found an Issue", message: error as? String ?? "Error", buttonTitle: "OK")
                 })
             }

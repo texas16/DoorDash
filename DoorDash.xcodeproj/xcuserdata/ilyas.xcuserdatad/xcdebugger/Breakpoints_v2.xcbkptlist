@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DoorDash/Services/StoreSearchService.swift"
-            timestampString = "566160738.3642679"
+            timestampString = "566167893.267398"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "20"
-            endingLineNumber = "20"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
             landmarkName = "getData(_:)"
             landmarkType = "7">
          </BreakpointContent>
